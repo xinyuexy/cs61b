@@ -1,6 +1,7 @@
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -8,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by 11519 on 2018/7/9.
  */
-public class ArrayMap<K, V> implements Map61B<K, V> {
+public class ArrayMap<K, V> implements Map61B<K, V>, Iterable<K> {
 
     private K[] keys;
     private V[] values;
@@ -69,6 +70,31 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
         return keyList;
     }
 
+    @Override
+    public Iterator<K> iterator() {
+        return new KeyIterator();
+    }
+
+    public class KeyIterator implements Iterator<K> {
+        private int ptr;
+
+        public KeyIterator() {
+            ptr = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return (ptr != size);
+        }
+
+        @Override
+        public K next() {
+            K returnItem = keys[ptr];
+            ptr += 1;
+            return returnItem;
+        }
+    }
+
     @Test
     public void test() {
         ArrayMap<Integer, Integer> am = new ArrayMap<Integer, Integer>();
@@ -76,4 +102,5 @@ public class ArrayMap<K, V> implements Map61B<K, V> {
         int expected = 5;
         assertEquals(expected, (long) am.get(2));
     }
+
 }
