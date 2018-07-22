@@ -98,7 +98,41 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return new BSTMapIterator();
+    }
+
+    /**
+     * BST Iterator
+     * refer: https://blog.csdn.net/mine_song/article/details/70903829
+     */
+    private class BSTMapIterator implements Iterator<K> {
+        private Stack<Node> st;
+        public BSTMapIterator() {
+            st = new Stack<>();
+            // 先找到左边第一个节点，并把路径入栈
+            while (root != null) {
+                st.push(root);
+                root = root.left;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return !st.isEmpty();
+        }
+
+        @Override
+        public K next() {
+            Node cur = st.pop();
+            K res = cur.key;
+            // 如果该元素有右节点，把它的右节点及右节点的所有左边节点都压入栈中
+            cur = cur.right;
+            while (cur != null) {
+                st.push(cur);
+                cur = cur.left;
+            }
+            return res;
+        }
     }
 
     public void printInOrder() {
@@ -146,6 +180,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         bm.put(1, "bb");
         bm.put(5, "cc");
         bm.printInOrder();
+        System.out.println();
+        //Iterator Test
+        for (int i: bm) {
+            System.out.print(i+" ");
+        }
     }
 
 }
