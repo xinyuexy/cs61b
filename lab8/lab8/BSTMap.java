@@ -150,7 +150,32 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        V res = this.get(key);
+        root = remove(root, key);
+        return res;
+    }
+
+    private Node remove(Node x, K key) {
+        if (x == null) return null;
+
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) {
+            x.left = remove(x.left, key);
+        } else if (cmp > 0) {
+            x.right = remove(x.right, key);
+        } else {
+            if (x.right == null) return x.left;
+            if (x.left == null) return x.right;
+
+            Node cur = x.right;
+            while (cur.left != null) {
+                cur = cur.left;
+            }
+            x.key = cur.key;
+            x.val = cur.val;
+            x.right = remove(x.right, cur.key);
+        }
+        return x;
     }
 
     @Override
